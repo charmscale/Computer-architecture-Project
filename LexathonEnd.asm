@@ -3,7 +3,6 @@
 	finalScore		.asciiz "FINAL SCORE:\n"
 	numberCorrectWords 	.asciiz "NUMBER OF WORDS FOUND:\n"
 	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
-	tryAgain 		.asciiz "TRY AGAIN? ('1' = YES, '0' = NO): "
 	grid:			.space 9	#PUT THE GRID HERE
 	dictionary:		.space 663552
 	wordsfound:		.space 663552
