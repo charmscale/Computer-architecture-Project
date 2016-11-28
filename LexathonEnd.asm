@@ -16,8 +16,7 @@
 	playagain		.acsiiz "Would you like to play again? Enter 1 to continue, or 0 to quit." 
 	
 .text
-game:		#PUT SETUP HERE
-		#this section opens and copies the file
+main:		#this section opens and copies the file
 		la $a0, file
 		li $v0, 13
 		li $a1, 0
@@ -29,11 +28,7 @@ game:		#PUT SETUP HERE
 		li $v0, 14
 		syscall					#copy the file
 		
-		li $t0, 50
-		lb $a0, dictionary($t0)			
-		li $v0, 11
-		syscall					#how to access a single character
-		
+game:		#PUT SETUP HERE
 		
 gettheword:	#this section fills both word and wordcheck with null because the next word might be shorter than the last
 		li $t0, 0				#set iterator for fillword to 1
