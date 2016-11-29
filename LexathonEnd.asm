@@ -2,6 +2,7 @@
 	gameOver		.asciiz "GAME OVER\n"
 	finalScore		.asciiz "FINAL SCORE:\n"
 	numberCorrectWords 	.asciiz "NUMBER OF WORDS FOUND:\n"
+	correctWordsMessage	.asciiz "WORDS FOUND:\n"
 	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
 	newLine			.asciiz "\n"
 	grid:			.space 9	#PUT THE GRID HERE
@@ -144,8 +145,8 @@ wordvalid:	li $v0, 4
 		
 		#INCREMENT THE SCORE, SAVE THE WORD, LOOP BACK TO GET ANOTHER WORD
 		
-showScore:				#prints "GAME OVER" message
-		li $v0, 4
+showScore:				
+		li $v0, 4			#prints "GAME OVER" message
 		la $a0, gameOver
 		syscall
 		
@@ -160,13 +161,25 @@ showScore:				#prints "GAME OVER" message
 		la $a0, newLine
 		syscall
 		
-showCorrectWords:			#prints "NUMBER OF WORDS FOUND" message
-		li $v0, 4
+showCorrectWords:			
+		li $v0, 4			#prints "NUMBER OF WORDS FOUND" message
 		la $v0, numberCorrectWords
 		syscall
 		
 		li $v0, 1			#prints number of words player got correct
 		move $a0, $s7			#register for word count
+		syscall
+		
+		li $v0, 4			#skip line
+		la $a0, newLine
+		syscall
+		
+		li $v0, 4
+		la $a0, correctWordsMessage
+		syscall
+		
+		li $v0, 4			#correct words list appears here
+		la $a0, correctWords
 		syscall
 		
 		li $v0, 4			#skip line
