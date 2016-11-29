@@ -4,6 +4,7 @@
 	numberCorrectWords 	.asciiz "NUMBER OF WORDS FOUND:\n"
 	correctWordsMessage	.asciiz "WORDS FOUND:\n"
 	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
+	missedWordsMessage	.asciiz "WORDS MISSED:\n"
 	newLine			.asciiz "\n"
 	grid:			.space 9	#PUT THE GRID HERE
 	dictionary:		.space 663552
@@ -195,6 +196,18 @@ showTotalWords:
 		
 		li $v0, 1			#prints number of words player missed
 		move $a0, $s2			#moving missed words for printing
+		syscall
+		
+		li $v0, 4
+		la $a0, missingWordsMessage
+		syscall
+		
+		li $v0, 4			#missing words list appears here
+		la $a0, missingWords
+		syscall
+		
+		li $v0, 4			#skip line
+		la $a0, newLine
 		syscall
 		
 		li $v0, 4
