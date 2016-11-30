@@ -27,7 +27,7 @@ main:		#this section opens and copies the file
 		
 		move $a0, $v0
 		la $a1, dictionary
-		li $a2,	663552
+		li $a2,	655360
 		li $v0, 14
 		syscall					#copy the file
 		
@@ -148,7 +148,7 @@ iteratedict:	subi $t1, $t1, 9
 		sub $t1, $zero, $t1			#gets the amount of word left, plus 1
 		add $t0, $t0, $t1			#adds the amount to dictcheck iterator so that rest of word is skipped
 		
-		bne $t0, 663552, dictcheck		#if we have not reached the end of the file, check new word
+		bne $t0, 655360, dictcheck		#if we have not reached the end of the file, check new word
 		
 		li $v0, 4
 		la $a0, notthere
@@ -187,7 +187,7 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		syscall
 					
 		li $v0, 4			#prints "NUMBER OF WORDS FOUND" message
-		la $v0, numberCorrectWords
+		la $a0, numberCorrectWords
 		syscall
 		
 		div $t0, $s7, 9
