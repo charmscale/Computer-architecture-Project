@@ -4,7 +4,7 @@
 	numberCorrectWords 	.asciiz "NUMBER OF WORDS FOUND:\n"
 	correctWordsMessage	.asciiz "WORDS FOUND:\n"
 	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
-	missedWordsMessage	.asciiz "WORDS MISSED:\n"
+	missedWordsMessage	.asciiz "POSSIBLE WORDS:\n"
 	newLine			.asciiz "\n"
 	grid:			.space 9	#PUT THE GRID HERE
 	dictionary:		.space 663552
@@ -19,6 +19,7 @@
 	playagain		.acsiiz "Would you like to play again? Enter 1 to continue, or 0 to quit." 
 	
 .text
+		#$s4- score, $s7- size of words found
 main:		#this section opens and copies the file
 		la $a0, file
 		li $v0, 13
@@ -31,7 +32,8 @@ main:		#this section opens and copies the file
 		li $v0, 14
 		syscall					#copy the file
 		
-game:		#PUT SETUP HERE
+game:		li $s7, 0				#start the word counter at 0
+		#PUT SETUP HERE
 		
 gettheword:	#this section fills both word and wordcheck with null because the next word might be shorter than the last
 		li $t0, 0				#set iterator for fillword to 1
@@ -144,10 +146,18 @@ wordvalid:	li $v0, 4
 		la $a0, valid
 		syscall
 		
-		#INCREMENT THE SCORE, SAVE THE WORD, LOOP BACK TO GET ANOTHER WORD
+		#this adds the word to the wordsfound list
+		li $t0, 0
+addword:	lb $t1, word($t0)
+		sb $t1, wordsfound($s7)
+		addi $t0, $t0, 1
+		addi $s7, $s7, 1
+		bne $t0, 9, addword
 		
-showScore:				
-		li $v0, 4			#prints "GAME OVER" message
+		#INCREMENT THE SCORE, LOOP BACK TO GET ANOTHER WORD
+		
+		#this is the end of the game			
+endsequence:	li $v0, 4			#prints "GAME OVER" message
 		la $a0, gameOver
 		syscall
 		
@@ -161,27 +171,41 @@ showScore:
 		li $v0, 4			#skip line
 		la $a0, newLine
 		syscall
-		
-showCorrectWords:			
+					
 		li $v0, 4			#prints "NUMBER OF WORDS FOUND" message
 		la $v0, numberCorrectWords
 		syscall
 		
+		div $t0, $s7, 9
 		li $v0, 1			#prints number of words player got correct
-		move $a0, $s7			#register for word count
+		move $a0, $t0			#register for word count
 		syscall
 		
 		li $v0, 4			#skip line
 		la $a0, newLine
-		syscall
+		syscall	
 		
 		li $v0, 4
 		la $a0, correctWordsMessage
 		syscall
 		
-		li $v0, 4			#correct words list appears here
-		la $a0, correctWords
+		li $t0, 0			#set the iterator for the entire wordsfound
+		li $t1, 0			#set the iterator for the word
+		
+correctword:	lb $a0, wordsfound($t0)		#load the character
+		li $v0, 11
+		syscall				#print the character
+		
+		addi $t0, $t0, 1		#increment entire list
+		addi $t1, $t1, 1		#increment word
+		bne $t1, 9, correctword		#if we haven't gotten to the end of the word, repeat
+		li $t1, 0			#reset iterator for word
+		
+		li $v0, 4			#skip line
+		la $a0, newLine
 		syscall
+		
+		bne $t0, $s7, correctword	#if we haven't gotten to the end of the list, repeat
 		
 		li $v0, 4			#skip line
 		la $a0, newLine
