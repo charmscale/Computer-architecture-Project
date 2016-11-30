@@ -90,7 +90,11 @@ lettersgrid:	lb $t3, word($t1)			#load letter in word
 		
 		j lettersgrid				#repeat the loop checking each letter in the word against a certain letter in the grid
 		
-equal:		sb $t3, wordcheck($t1)			#note that this letter has been found
+equal:		lb $t4, wordcheck($t1)
+		addi $t1, $t1, 1
+		bne $t4, 0, lettersgrid			#if the letter has already been found, keep going
+		subi $t1, $t1, 1
+		sb $t3, wordcheck($t1)			#note that this letter has been found
 
 iterategrid:	addi $t0, $t0, 1			#increments gridcheck loop
 		bne $t0, 9, gridcheck			#if you haven't checked every letter in the grid, go to the next
