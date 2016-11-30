@@ -5,7 +5,6 @@
 	correctWordsMessage	.asciiz "WORDS FOUND:\n"
 	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
 	missedWordsMessage	.asciiz "POSSIBLE WORDS:\n"
-	newLine			.asciiz "\n"
 	grid:			.space 9	#PUT THE GRID HERE
 	dictionary:		.space 663552
 	wordsfound:		.space 663552
@@ -172,8 +171,8 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		move $a0, $s4`			#load score
 		syscall
 		
-		li $v0, 4			#skip line
-		la $a0, newLine
+		li $v0, 11			#skip line
+		la $a0, 10
 		syscall
 					
 		li $v0, 4			#prints "NUMBER OF WORDS FOUND" message
@@ -185,8 +184,8 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		move $a0, $t0			#register for word count
 		syscall
 		
-		li $v0, 4			#skip line
-		la $a0, newLine
+		li $v0, 11			#skip line
+		la $a0, 10
 		syscall	
 		
 		li $v0, 4
@@ -205,14 +204,14 @@ correctword:	lb $a0, wordsfound($t0)		#load the character
 		bne $t1, 9, correctword		#if we haven't gotten to the end of the word, repeat
 		li $t1, 0			#reset iterator for word
 		
-		li $v0, 4			#skip line
-		la $a0, newLine
+		li $v0, 11			#skip line
+		la $a0, 10
 		syscall
 		
 		bne $t0, $s7, correctword	#if we haven't gotten to the end of the list, repeat
 		
-		li $v0, 4			#skip line
-		la $a0, newLine
+		li $v0, 11			#skip line
+		la $a0, 10
 		syscall
 				
 showTotalWords:
@@ -234,8 +233,8 @@ showTotalWords:
 		la $a0, missingWords
 		syscall
 		
-		li $v0, 4			#skip line
-		la $a0, newLine
+		li $v0, 11			#skip line
+		la $a0, 10
 		syscall
 		
 		li $v0, 4
@@ -247,8 +246,8 @@ showTotalWords:
 		
 		beq $v0, 0, end			#jumps to exit
 		
-		li $v0, 4			#skip line
-		la $a0, newLine
+		li $v0, 11			#skip line
+		la $a0, 10
 		syscall
 		
 		j game				#repeats the game
