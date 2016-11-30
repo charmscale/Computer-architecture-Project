@@ -79,9 +79,9 @@ next1:		lb $t1, word+2
 		li $t0, 0				#set iterator for grid to 0
 		
 gridcheck:	li $t1, 0				#set iterator for word to 0
-
-lettersgrid:	lb $t2, grid($t0)			#load letter in grid
-		lb $t3, word($t1)			#load letter in word
+		lb $t2, grid($t0)			#load letter in grid
+		
+lettersgrid:	lb $t3, word($t1)			#load letter in word
 		
 		beq $t3, 0, iterategrid			#if entire word has been compared to grid letter, go iterate
 		beq $t3, $t2, equal			#if the letters are the same, go note it and then iterate
