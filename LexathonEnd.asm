@@ -69,6 +69,16 @@ nonewline:	beq $t0, 10, next1			#exits loop if at the end of the word
 next1:		lb $t1, word+2	
 		beq $t1, $zero, gettheword		#check for 3 letters
 		
+		centercheck:	lb $t2, word($t0)
+		addi $t0, $t0, 1
+		beq $t1, $t2, next2			#look through the word, and continue if you find the center
+		
+		bne $t0, 9, centercheck				
+		li $v0, 4
+		la $a0, notcenter
+		syscall
+		j gettheword
+		
 		#This section checks each letter in the grid against each letter in the word, looping the grid on the outside and the
 		#word on the inside. If a letter in the grid is the same as a letter in the word, it writes the letter in the 
 		#same place in wordcheck, and then does what it would do if it had finished checking the word because letters in the
@@ -209,29 +219,6 @@ correctword:	lb $a0, wordsfound($t0)		#load the character
 		syscall
 		
 		bne $t0, $s7, correctword	#if we haven't gotten to the end of the list, repeat
-		
-		li $v0, 11			#skip line
-		la $a0, 10
-		syscall
-				
-showTotalWords:
-		li $v0, 4			#prints "NUMBER OF WORDS MISSED: " message
-		la $v0, numberMissedWords
-		syscall
-		
-		sub $s2, $s1, $s7		#obtain number of words missed
-		
-		li $v0, 1			#prints number of words player missed
-		move $a0, $s2			#moving missed words for printing
-		syscall
-		
-		li $v0, 4
-		la $a0, missingWordsMessage
-		syscall
-		
-		li $v0, 4			#missing words list appears here
-		la $a0, missingWords
-		syscall
 		
 		li $v0, 11			#skip line
 		la $a0, 10
