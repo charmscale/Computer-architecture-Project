@@ -130,24 +130,25 @@ notingrid:	li $v0, 4
 		#gets to the end of the file without finding an identical word, it will tell the user the word isn't a real word and
 		#loop back to asking for a word. 
 		
-		li $t0, 0				#set iterator for file
+begincheck:	li $t0, 0				#set iterator for file
 		
 dictcheck:	li $t1, 0				#set iterator for word
-
+		
 wordloop:	lb $t2, word($t1)			#gets letter in word
 		lb $t3, dictionary($t0)			#gets letter in dictionary
 		
 		bne $t2, $t3, iteratedict		#if the words are not the same
-		beq $t1, 9, wordvalid			#if all the letters have been checked, and the words are the same
+		beq $t1, 8, wordvalid			#if all the letters have been checked, and the words are the same
 		
 		addi $t0, $t0, 1			#increments dictionary
 		addi $t1, $t1, 1			#increments wordloop
 		j wordloop				#if the letters are the same, and the entire word has not been checked, loop
 
-iteratedict:	subi $t1, $t1, 10
+iteratedict:	subi $t1, $t1, 9
 		sub $t1, $zero, $t1			#gets the amount of word left, plus 1
 		add $t0, $t0, $t1			#adds the amount to dictcheck iterator so that rest of word is skipped
-		bne $t0, 663553, dictcheck		#if we have not reached the end of the file, check new word
+		
+		bne $t0, 663552, dictcheck		#if we have not reached the end of the file, check new word
 		
 		li $v0, 4
 		la $a0, notthere
