@@ -6,8 +6,8 @@
 	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
 	missedWordsMessage	.asciiz "POSSIBLE WORDS:\n"
 	grid:			.space 9	#PUT THE GRID HERE
-	dictionary:		.space 663552
-	wordsfound:		.space 663552
+	dictionary:		.space 655360
+	wordsfound:		.space 655360
 	word:			.space 10
 	wordcheck:		.space 10
 	file:			.asciiz "Dictionary.txt"
