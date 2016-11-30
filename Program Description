@@ -1,1 +1,4 @@
-
+/* The purpose of this program is to make a game (in this case, Lexathon) entirely in MIPS assembly language. 
+The game is a type of word search, where players are tasked to find as many words as possible from a set grid of letters. 
+Players are scored for each word they successfully find while a clock ticks down to zero. 
+After the timer runs out., the game ends. */
