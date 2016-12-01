@@ -1,1 +1,9 @@
-
+/* 
+For my part of the program, I used a simple branch instruction to brach to a label chosen by the player.
+The most difficult part of my program was displaying the grid. My approach to this problem was to create an array of all 26
+letters of the alphabet. To print the random 3 x 3 grid, I initialized a $t0 counter and used a jump instruction to implement a while loop. 
+In the while loop, I used service 42 to generate a random integer between 1 and 26 that would be used to index an element in the char array. Once 
+the integer is generated, the element of that index is accessed and printed onto the console. When the counter reaches 3 or 6,
+the while loop branches to print a new line and returns to the while loop. When the counter reaches 9,
+the while loop ends, thus printing the the 3 x 3 grid.
+*/
