@@ -34,6 +34,33 @@ main:		#this section opens and copies the file
 game:		li $s7, 0				#start the word counter at 0
 		#PUT SETUP HERE
 		
+randomGrid:
+	add $t0, $zero, $zero
+	for_row:
+		beq $t0, 3, endRow
+		add $t1, $zero, $zero
+	for_col:
+		beq $t1, 3, endCol
+		li $v0, 42
+		li $a0, 1
+		li $a1, 25
+		syscall
+
+		add $a0, $a0, 65
+		li $v0, 11
+		syscall
+
+		addi $t1, $t1, 1
+		j for_col
+	endCol:
+		li $v0, 11
+		la $a0, 10
+		syscall
+
+		addi $t0, $t0, 1		
+		j for_row
+	endRow:
+	
 gettheword:	#this section fills both word and wordcheck with null because the next word might be shorter than the last
 		li $t0, 0				#set iterator for fillword to 1
 
@@ -60,22 +87,16 @@ timer:
 	syscall
 	
 	addu $s2, $a0, $zero	#store starting time
-
 	addiu $s2, $s2, 60000
 	
 	start:	
-
 		li $v0, 30
 		syscall
 
 		addu $t0, $a0, $zero 	#store changed time
-		
 		subu $t0, $s2, $t0
-
 		bltz $t0, end
-
 		j start
-
 	end:
 		
 		#This section eliminates the newline character in the word entered by the user
