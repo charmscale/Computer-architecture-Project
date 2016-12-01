@@ -19,6 +19,9 @@
 	
 .text
 		#$s4- score, $s7- size of words found
+		.include finproj.asm
+		.include randomGrid.asm
+		.include timer.asm
 main:		#this section opens and copies the file
 		la $a0, file
 		li $v0, 13
