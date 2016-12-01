@@ -3,8 +3,6 @@
 	finalScore		.asciiz "FINAL SCORE:\n"
 	numberCorrectWords 	.asciiz "NUMBER OF WORDS FOUND:\n"
 	correctWordsMessage	.asciiz "WORDS FOUND:\n"
-	numberMissedWords 	.asciiz "NUMBER OF WORDS MISSED:\n"
-	missedWordsMessage	.asciiz "POSSIBLE WORDS:\n"
 	grid:			.space 9	#PUT THE GRID HERE
 	dictionary:		.space 655360
 	wordsfound:		.space 655360
@@ -305,11 +303,40 @@ finalcheck:	lb $t2, word($t0)			#get the letter in word
 		bne $t2, $t3, notingrid			#if the letters aren't equal, not all the letters are in the grid		
 		bne $t2, $zero, finalcheck		#if the word isn't done, loop
 		
-		j dictcheck				#if the word is in the grid, check if it is in the dictionary
+		j beginfound				#if the word is in the grid, check if it is in the dictionary
 		
 notingrid:	li $v0, 4
 		la $a0, notgrid
 		syscall					#prints that the letters aren't in the grid
+		j gettheword
+		
+beginfound:	li $t0, 0
+
+foundcheck:	li $t1, 0
+
+foundloop:	lb $t2, word($t1)
+		lb $t3, wordsfound($t0)
+		
+		bne $t2, $t3, iteratefound
+		beq $t1, 8, wordfound
+		
+		addi $t0, $t0, 1
+		addi $t1, $t1, 1
+		
+		j foundloop
+		
+iteratefound:	subi $t1, $t1, 9
+		sub $t1, $zero, $t1
+		add $t0, $t0, $t1
+		
+		bne $t0, $s7, foundcheck
+		
+		j begincheck
+		
+wordfound:	li $v0, 4
+		la $a0, alreadyfound
+		syscall
+		
 		j gettheword
 		
 		#This section will check the word against the dictionary. Each dictionary word is nine characters, with null filling
