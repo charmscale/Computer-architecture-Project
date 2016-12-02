@@ -368,7 +368,7 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		syscall
 		
 		li $v0, 1			#print integer
-		move $a0, $s0`			#load score
+		move $a0, $s0			#load score
 		syscall
 		
 		li $v0, 11			#skip line
