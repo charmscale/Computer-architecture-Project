@@ -33,10 +33,10 @@
 main:		#this section opens and copies the file
 		la $a0, file
 		li $v0, 13
+		move $a0, $v0
 		li $a1, 0
 		syscall					#open the file
 		
-		move $a0, $v0
 		la $a1, dictionary
 		li $a2,	655360
 		li $v0, 14
@@ -134,6 +134,10 @@ back:		li $a1, 25  #Here you set $a1 to the max bound.
     		la $a0, 10
     		syscall
 		j back
+exit:
+		#end
+		li $v0, 10
+		syscall
 		
 option2:
 		
