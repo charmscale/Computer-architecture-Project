@@ -1,8 +1,8 @@
 .data
-	gameOver		.asciiz "GAME OVER\n"
-	finalScore		.asciiz "FINAL SCORE:\n"
-	numberCorrectWords 	.asciiz "NUMBER OF WORDS FOUND:\n"
-	correctWordsMessage	.asciiz "WORDS FOUND:\n"
+	gameOver:		.asciiz "GAME OVER\n"
+	finalScore:		.asciiz "FINAL SCORE:\n"
+	numberCorrectWords: 	.asciiz "NUMBER OF WORDS FOUND:\n"
+	correctWordsMessage:	.asciiz "WORDS FOUND:\n"
 	grid:			.space 9	#PUT THE GRID HERE
 	dictionary:		.space 655360
 	wordsfound:		.space 655360
