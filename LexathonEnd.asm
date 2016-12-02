@@ -201,7 +201,7 @@ next1:		lb $t1, word+2
 		
 		centercheck:	lb $t2, word($t0)
 		addi $t0, $t0, 1
-		beq $t1, $t2, next2			#look through the word, and continue if you find the center
+		beq $t1, $t2, next1			#look through the word, and continue if you find the center
 		
 		bne $t0, 9, centercheck				
 		li $v0, 4
