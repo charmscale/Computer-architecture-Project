@@ -330,7 +330,7 @@ addword:	lb $t1, word($t0)
 		li $v0, 30
 		syscall
 		sub $t0, $s0, $a0
-		divi $t0, $t0, 1000
+		divu $t0, $t0, 1000
 		
 		li $v0, 4
 		la $a0, m7
@@ -379,7 +379,7 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		la $a0, numberCorrectWords
 		syscall
 		
-		divi $t0, $s7, 9
+		divu $t0, $s7, 9
 		li $v0, 1			#prints number of words player got correct
 		move $a0, $t0			#register for word count
 		syscall
