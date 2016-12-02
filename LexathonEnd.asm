@@ -13,26 +13,23 @@
 	notgrid:		.asciiz "This word has letters that aren't in the grid. "
 	notthere:		.asciiz "This is not a real word."
 	valid:			.asciiz "This word is valid." 
-	playagain		.acsiiz "Would you like to play again? Enter 1 to continue, or 0 to quit." 
 	m1: 			.asciiz "Welome to Lexathon!!! \n"
 	m2: 			.asciiz "1. Start Game \n"
 	m3: 			.asciiz "2. Instructions \n"
 	m4: 			.asciiz "3. Quit Game \n"
 	m5: 			.asciiz "LET'S BEGIN!!!\n"
 	m6: 			.asciiz "Goodbye.\n"
-	newline: 		.asciiz "\n"
+	m7:			.asciiz "You have "
+	m8:			.asciiz " seconds remaining."
 	space: 			.asciiz " "
 	p1: 			.asciiz "Please enter an option: \n"
 	r1: 			.asciiz "The rules of the game are simple. \n"
 	r2: 			.asciiz "You are given a grid of random letters, and you must discover as many words as\npossible that are 4 letters or more that also contain the central letter. \n"
-	CHARarry: 		.byte 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+	CHARarry: 		.ascii "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 	
 .text
-		#$s4- score, $s7- size of words found
-		.include finproj.asm
-		.include randomGrid.asm
-		.include timer.asm
+		#$s0- score, $s7- size of words found, $s4- timer
 main:		#this section opens and copies the file
 		la $a0, file
 		li $v0, 13
@@ -46,7 +43,13 @@ main:		#this section opens and copies the file
 		syscall					#copy the file
 		
 game:		li $s7, 0				#start the word counter at 0
-		#PUT SETUP HERE
+		li $s0, 0
+		
+		#start time
+		li $v0, 30
+		syscall
+		move $a0, $s4
+		addi $s4, 60000
 		
 		#print messages and prompts
 		li $v0, 4
@@ -77,17 +80,13 @@ game:		li $s7, 0				#start the word counter at 0
 		
 		#store input in $t3
 		move $t3, $v0
-		
-		#options for branching
-		addi $t0, $zero, 1 #start game
-		addi $t1, $zero, 2 #instructions
-		addi $t2, $zero, 3 #end game
-		
-		beq $t0, $t3, option1
-		beq $t1, $t3, option2
-		beq $t2, $t3, option3
 	
-	option1:
+		
+		beq $t3, 1, option1
+		beq $t3, 2, option2
+		beq $t3, 3 option3
+	
+option1:
 	
 		#print message
 		li $v0, 4
@@ -95,65 +94,48 @@ game:		li $s7, 0				#start the word counter at 0
 		syscall
 		
 		#i = 0
-		addi $t0, $zero, 0
-		
-		#int for newline
-		addi $t2, $zero, 3
-		addi $t3, $zero, 7
+		li $t0, 0
 		
 		#while loop to print random 3x3 grid
-		while:
+while:		bgt $t0, 10, exit
+		#print space
+		li $v0, 4   #1 print integer
+    		la $a0, space
+    		syscall
 			
-			bgt $t0, 10, exit
+		#if i = 3 or i = 6 add newline
+		beq $t0, 3, nline
+		beq $t0, 6, nline
 			
-			#print space
-			li $v0, 4   #1 print integer
-    			la $a0, space
-    			syscall
+		#generate random index
+back:		li $a1, 25  #Here you set $a1 to the max bound.
+    		li $v0, 42  #generates the random number.
+    		syscall
+    		
+    		move $t1, $a0
+    		
+    		#get random char
+		lb $t6, CHARarry($t1)
+    		
+    		#print char
+    		li $v0, 11
+    		move $a0, $t6
+    		syscall
 			
-			#if i = 3 or i = 6 add newline
-			beq $t0, $t2, nline
-			beq $t0, $t3, nline
-			
-			#generate random index
-			li $a1, 15  #Here you set $a1 to the max bound.
-    			li $v0, 42  #generates the random number.
-    			syscall
+		#save char
+		sb $t6, grid($t0)
     		
-    			move $t1, $a0
-    			#add $a0, $a0, 100  #Here you add the lowest bound
-    			#li $v0, 4   #1 print integer
-    			#la $a0, newline
-    			#syscall
-    		
-    			#get random char
-    			la $t7, CHARarry
-    			add $t7, $t7, $t1
-    		
-    			lb $t6, 0($t7)
-    		
-    			#print char
-    			li $v0, 11
-    			move $a0, $t6
-    			syscall
-    		
-    			#i++
-    			addi $t0, $t0, 1
+    		#i++
+    		addi $t0, $t0, 1
     			
-    			j while
+    		j while
     		
-    		nline: 
-			li $v0, 4   
-    			la $a0, newline
-    			syscall
-    			addi $t0, $t0, 1
-    			j while
-		exit:
-			#end
-			li $v0, 10
-			syscall
+ nline: 	li $v0, 11   
+    		la $a0, 10
+    		syscall
+		j back
 		
-	option2:
+option2:
 		
 		#print instructions
 		li $v0, 4
@@ -167,7 +149,7 @@ game:		li $s7, 0				#start the word counter at 0
 		li $v0, 10
 		syscall
 		
-	option3:
+option3:
 		
 		li $v0, 4
 		la $a0, m6
@@ -175,39 +157,11 @@ game:		li $s7, 0				#start the word counter at 0
 		
 		li $v0, 10
 		syscall
-		
-		
-randomGrid:
-	add $t0, $zero, $zero
-	for_row:
-		beq $t0, 3, endRow
-		add $t1, $zero, $zero
-	for_col:
-		beq $t1, 3, endCol
-		li $v0, 42
-		li $a0, 1
-		li $a1, 25
-		syscall
-
-		add $a0, $a0, 65
-		li $v0, 11
-		syscall
-
-		addi $t1, $t1, 1
-		j for_col
-	endCol:
-		li $v0, 11
-		la $a0, 10
-		syscall
-
-		addi $t0, $t0, 1		
-		j for_row
-	endRow:
 	
 gettheword:	#this section fills both word and wordcheck with null because the next word might be shorter than the last
 		li $t0, 0				#set iterator for fillword to 1
 
-fillword:	#PRINT THE PUZZLE
+fillword:
 		li $t1, 0
 		sb $t1, word($t0)
 		sb $t1, wordcheck($t0)
@@ -224,23 +178,9 @@ fillword:	#PRINT THE PUZZLE
 		li $a1, 9
 		syscall					#get the word
 		
-		#A GOOD PLACE TO CHECK TO SEE IF TIME IS UP
-timer:
-	li $v0, 30
-	syscall
-	
-	addu $s2, $a0, $zero	#store starting time
-	addiu $s2, $s2, 60000
-	
-	start:	
-		li $v0, 30
+		li $v0, 30				#check the time
 		syscall
-
-		addu $t0, $a0, $zero 	#store changed time
-		subu $t0, $s2, $t0
-		bltz $t0, end
-		j start
-	end:
+		bgt $a0, $s0, endsequence
 		
 		#This section eliminates the newline character in the word entered by the user
 		li $t0, 0				#sets the iterator for nonewline
@@ -383,7 +323,41 @@ addword:	lb $t1, word($t0)
 		addi $s7, $s7, 1
 		bne $t0, 9, addword
 		
-		#INCREMENT THE SCORE, LOOP BACK TO GET ANOTHER WORD
+		#add to the score and the time
+		addi $s0, $s0, 1
+		addi $s4, $s4, 5000
+		
+		li $v0, 30
+		syscall
+		subi $t0, $s0, $a0
+		divi $t0, $t0, 1000
+		
+		li $v0, 4
+		la $a0, m7
+		syscall
+		
+		li $v0, 1
+		move $a0, $t0
+		syscall
+		
+		li $v0, 4
+		la $a0, m8
+		syscall
+		
+		li $t0, 0
+		li $v0, 11
+printgrid:	beq $t0, 3, newline
+backprint:	lb $a0, grid($t0)
+		addi $t0, $t0, 1
+		syscall
+		la $a0, space
+		syscall
+		bne $t0, 9, printgrid
+		j gettheword
+		
+newline:	li $a0, 10
+		syscall
+		j backprint
 		
 		#this is the end of the game			
 endsequence:	li $v0, 4			#prints "GAME OVER" message
@@ -394,7 +368,7 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		syscall
 		
 		li $v0, 1			#print integer
-		move $a0, $s4`			#load score
+		move $a0, $s0`			#load score
 		syscall
 		
 		li $v0, 11			#skip line
@@ -405,7 +379,7 @@ endsequence:	li $v0, 4			#prints "GAME OVER" message
 		la $a0, numberCorrectWords
 		syscall
 		
-		div $t0, $s7, 9
+		divi $t0, $s7, 9
 		li $v0, 1			#prints number of words player got correct
 		move $a0, $t0			#register for word count
 		syscall
@@ -440,23 +414,9 @@ correctword:	lb $a0, wordsfound($t0)		#load the character
 		la $a0, 10
 		syscall
 		
-		li $v0, 4
-		la $a0, playagain
-		syscall				#asks if the player wants to play again
-		
-		li $v0, 5
-		syscall				#gets answer
-		
-		beq $v0, 0, end			#jumps to exit
-		
-		li $v0, 11			#skip line
-		la $a0, 10
-		syscall
-		
 		j game				#repeats the game
 
-end:		li $v0, 10
-		sycall				#exits
+
 		
 		
 		
