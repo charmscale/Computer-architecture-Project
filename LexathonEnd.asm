@@ -49,7 +49,7 @@ game:		li $s7, 0				#start the word counter at 0
 		li $v0, 30
 		syscall
 		move $a0, $s4
-		addi $s4, 60000
+		addi $s4, $s4, 60000
 		
 		#print messages and prompts
 		li $v0, 4
@@ -329,7 +329,7 @@ addword:	lb $t1, word($t0)
 		
 		li $v0, 30
 		syscall
-		subi $t0, $s0, $a0
+		sub $t0, $s0, $a0
 		divi $t0, $t0, 1000
 		
 		li $v0, 4
