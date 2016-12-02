@@ -12,6 +12,7 @@
 	enterWord:		.asciiz "Enter a word (all caps) with 3 to 9 letters: "
 	notgrid:		.asciiz "This word has letters that aren't in the grid. "
 	notthere:		.asciiz "This is not a real word."
+	notcenter:		.asciiz "Enter a word that contains the center letter."
 	valid:			.asciiz "This word is valid." 
 	m1: 			.asciiz "Welome to Lexathon!!! \n"
 	m2: 			.asciiz "1. Start Game \n"
