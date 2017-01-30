@@ -13,7 +13,10 @@ r1: .asciiz "The rules of the game are simple. \n"
 r2: .asciiz "You are given a grid of random letters, and you must discover as many words as\npossible that are 4 letters or more that also contain the central letter. \n"
 CHARarry: .byte 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
 
-.text
+.text	
+	.include "LexthathonEnd.asm"	
+	.include "randomGrid.asm"	
+	.include "timer.asm"	
 	main: 
 		
 		#print messages and prompts
