@@ -1,0 +1,6 @@
+Instructions:
+1) Copy the Dictionary.txt file to the same directory that your MARS.jar file is located (The game will not run correctly without this file)
+2) In MARS, open the file named finproj.asm
+3) In the menu bar tab labeled, "Settings" be sure to check, "Assemble all files in directory" and, "Initialize Program Counter to Global Main
+(if defined)"
+4) Type F1 to assemble the program, and F5 to run the program
